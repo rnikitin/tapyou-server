@@ -1,0 +1,9 @@
+{
+  "name": "tapyou",
+  "version": "0.0.1",
+  "engines":{"node": "0.8.x  || 0.10.x"},
+  "private": true,
+  "scripts": {
+    "start": "node server.js"
+  }
+}
