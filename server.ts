@@ -2,16 +2,15 @@
 /// <reference path="typings/socket.io/socket.io.d.ts" />
 /// <reference path="typings/node/node.d.ts" />
 
-var io: SocketManager = require('socket.io').listen(process.env.PORT || 31337);
+var http = require('http');
+var httpServer = http.createServer().listen(process.env.PORT || 31337);
+
+var io: SocketManager = require('socket.io').listen(httpServer);
 
 io.sockets.on('connection', function (socket: Socket) {
     // joining the room
     socket.on('join', (data: ISubscribeData) =>
     {
-        // save user's profile
-        //socket['username'] = data.name;
-        //socket['room'] = data.channel;
-
         socket.set('user', data, () => { });
 
         console.log('join: ', data);

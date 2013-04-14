@@ -1,4 +1,6 @@
-﻿var io = require('socket.io').listen(process.env.PORT || 31337);
+﻿var http = require('http');
+var httpServer = http.createServer().listen(process.env.PORT || 31337);
+var io = require('socket.io').listen(httpServer);
 io.sockets.on('connection', function (socket) {
     socket.on('join', function (data) {
         socket.set('user', data, function () {
