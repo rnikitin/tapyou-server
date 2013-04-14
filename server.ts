@@ -8,6 +8,11 @@ var httpServer = http.createServer().listen(process.env.PORT || 31337);
 var io: SocketManager = require('socket.io').listen(httpServer);
 
 io.sockets.on('connection', function (socket: Socket) {
+
+    // configure
+    // due to azure issue disable websocket
+    io.set('transports', ['htmlfile', 'flashsocket', 'xhr-polling', 'jsonp-polling']);
+
     // joining the room
     socket.on('join', (data: ISubscribeData) =>
     {
@@ -53,7 +58,7 @@ io.sockets.on('connection', function (socket: Socket) {
             try {
                 io.sockets.in(user.channel).emit('user:disconnected', user.name);
             }
-            catch (e){ }
+            catch (e) { }
         });
     });
 });

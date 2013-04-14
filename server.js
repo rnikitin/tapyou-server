@@ -2,6 +2,12 @@
 var httpServer = http.createServer().listen(process.env.PORT || 31337);
 var io = require('socket.io').listen(httpServer);
 io.sockets.on('connection', function (socket) {
+    io.set('transports', [
+        'htmlfile', 
+        'flashsocket', 
+        'xhr-polling', 
+        'jsonp-polling'
+    ]);
     socket.on('join', function (data) {
         socket.set('user', data, function () {
         });
