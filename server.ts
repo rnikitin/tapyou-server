@@ -7,11 +7,19 @@ var httpServer = http.createServer().listen(process.env.PORT || 31337);
 
 var io: SocketManager = require('socket.io').listen(httpServer);
 
+// configure
+// due to azure issue disable websocket
+io.configure(function () {
+    io.set('transports', [
+      'flashsocket'
+    , 'htmlfile'
+    , 'xhr-polling'
+    , 'jsonp-polling'
+    ]);
+});
+
 io.sockets.on('connection', function (socket: Socket) {
 
-    // configure
-    // due to azure issue disable websocket
-    io.set('transports', ['htmlfile', 'flashsocket', 'xhr-polling', 'jsonp-polling']);
 
     // joining the room
     socket.on('join', (data: ISubscribeData) =>
