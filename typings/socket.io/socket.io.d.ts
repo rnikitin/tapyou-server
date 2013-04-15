@@ -31,7 +31,7 @@ interface Socket {
     to(room: string): Socket;
     join(name: string, fn: Function): Socket;
     unjoin(name: string, fn: Function): Socket;
-    set (key: string, value: any, fn: Function): Socket;
+    set (key: string, value: any, fn?: Function): Socket;
     get (key: string, fn: Function): Socket;
     has(key: string, fn: Function): Socket;
     del(key: string, fn: Function): Socket;
@@ -42,7 +42,7 @@ interface Socket {
 }
 
 interface SocketNamespace {
-    clients(room: string): Socket[];
+    clients(room?: string): Socket[];
     log: any;
     store: any;
     json: any;

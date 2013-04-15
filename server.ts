@@ -16,57 +16,54 @@ io.configure(function () {
     , 'xhr-polling'
     , 'jsonp-polling'
     ]);
+
+    io.set('log level', 2);
 });
 
 io.sockets.on('connection', function (socket: Socket) {
 
+    socket.emit('connected');
 
     // joining the room
     socket.on('join', (data: ISubscribeData) =>
     {
-        socket.set('user', data, () => { });
+        socket['user'] = data;
 
-        console.log('join: ', data);
+        console.log('joined: ', data);
 
         // join user to room
-        socket.join(data.channel, () => { });
+        socket.join(data.channel);
         io.sockets.in(data.channel).emit('user:connected', data.name);
     });
 
     // event for sent message
     socket.on('message:sent', (message: ISocketMessage) =>
     {
-        socket.get('user', (err, user: ISubscribeData) =>
-        {
-            console.log('message: ', message, ' for room: ', user);
-            io.sockets.in(user.channel).emit('message:new', message);
-        });
-
+        var user = socket['user'];
+        console.log('message: ', message, ' for room: ', user);
+        io.sockets.in(socket['user'].channel).emit('message:new', message);
     });
 
-    socket.on('get:users', (room: string) =>
+    socket.on('get:users', (room: string, fn) =>
     {
         var users = [];
-        io.sockets.clients(room).forEach((s) =>
+        io.sockets.in(room).clients().forEach((s) =>
         {
-            s.get('user', (err, user: ISubscribeData) =>
-            {
-                users.push(user.name);
-            });
+            users.push(s['user'].name);
         });
 
-        socket.emit('result:users', users);
+        console.log('get:users', users);
+        // return data
+        fn(users);
     });
 
     // work with disconnect
     socket.on('disconnect', () =>
     {
-        socket.get('user', (err, user: ISubscribeData) =>
-        {
-            try {
-                io.sockets.in(user.channel).emit('user:disconnected', user.name);
-            }
-            catch (e) { }
-        });
+        var user = socket['user'];
+        try {
+            io.sockets.in(user.channel).emit('user:disconnected', user.name);
+        }
+        catch (e) { }
     });
 });
