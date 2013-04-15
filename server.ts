@@ -33,7 +33,7 @@ io.sockets.on('connection', function (socket: Socket) {
         io.sockets.in(data.channel).emit('user:connected', data.name);
     });
 
-    // 
+    // event for sent message
     socket.on('message:sent', (message: ISocketMessage) =>
     {
         socket.get('user', (err, user: ISubscribeData) =>
